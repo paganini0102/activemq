@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
+ * 实现了对每个请求的同步锁，同一时间只允许发送一个请求，
+ * 如果有第二个请求需要等待第一个请求发送完毕才可以继续发送。
  * Thread safe Transport Filter that serializes calls to and from the Transport Stack.
  */
 public class MutexTransport extends TransportFilter {

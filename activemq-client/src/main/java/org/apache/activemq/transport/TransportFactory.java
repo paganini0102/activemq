@@ -110,14 +110,28 @@ public abstract class TransportFactory {
         return tf.doBind(location);
     }
 
+    /**
+     * 1、配置wireformat
+     * 2、建立TcpTransport
+     * 3、在连接上包装四大辅助功能
+     * @param location
+     * @return
+     * @throws Exception
+     */
     public Transport doConnect(URI location) throws Exception {
         try {
+        	/**
+        	 * 把url里关于Transport的配置提取出来，WireFormat基本都可以看成url的配置
+        	 * 如果使用Openwire（默认协议），那么WireFormat就是openwire的相关配置
+        	 */
             Map<String, String> options = new HashMap<String, String>(URISupport.parseParameters(location));
             if( !options.containsKey("wireFormat.host") ) {
                 options.put("wireFormat.host", location.getHost());
             }
             WireFormat wf = createWireFormat(options);
+            // 建立socket连接
             Transport transport = createTransport(location, wf);
+            // 装饰者模式，在连接上包装上MutexTransportFilter、WireFormatNegotiator、InactivityMonitor、ResponseCorrelator四个功能
             Transport rc = configure(transport, wf, options);
             //remove auto
             IntrospectionSupport.extractProperties(options, "auto.");
@@ -171,12 +185,14 @@ public abstract class TransportFactory {
      * @throws IOException
      */
     public static TransportFactory findTransportFactory(URI location) throws IOException {
+    	// 解析URL
         String scheme = location.getScheme();
         if (scheme == null) {
             throw new IOException("Transport not scheme specified: [" + location + "]");
         }
         TransportFactory tf = TRANSPORT_FACTORYS.get(scheme);
         if (tf == null) {
+        	// 调用FactoryFinder找到正确的TransportFactory
             // Try to load if from a META-INF property.
             try {
                 tf = (TransportFactory)TRANSPORT_FACTORY_FINDER.newInstance(scheme);

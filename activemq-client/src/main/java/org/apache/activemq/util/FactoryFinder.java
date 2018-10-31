@@ -138,6 +138,7 @@ public class FactoryFinder {
     }
 
     /**
+     * 通过ObjectFactory来找到正确的TransportFacotry
      * Creates a new instance of the given key
      *
      * @param key is the key to add to the path to find a text file containing

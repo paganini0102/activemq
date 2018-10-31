@@ -513,6 +513,9 @@ public class ActiveMQConnection implements Connection, TopicConnection, QueueCon
     }
 
     /**
+     * 1、检查连接是否关闭或失效
+     * 2、确认客户端的ConnectionInfo是否被送到服务器
+     * 3、启动这个Connection中的每一个Session
      * Starts (or restarts) a connection's delivery of incoming messages. A call
      * to <CODE>start</CODE> on a connection that has already been started is
      * ignored.
@@ -1469,6 +1472,10 @@ public class ActiveMQConnection implements Connection, TopicConnection, QueueCon
     }
 
     /**
+     * 1、发送ConnectionInfo的数据包到服务端，如果info里没有用户自己设定的clientID，
+     * 还会自动帮忙生成一个。发送的时候调用的是syncSendPacket方法，是一个试探连接的步骤
+     * 2、建立一个通往临时目的消费者。所以其实每一个ActiveMQConnection的连接都自动包含
+     * 了一个消费者。
      * Send the ConnectionInfo to the Broker
      *
      * @throws JMSException

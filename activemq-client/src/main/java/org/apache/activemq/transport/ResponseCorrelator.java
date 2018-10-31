@@ -30,11 +30,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 实现了异步请求但需要获取响应信息，否则就会阻塞等待功能。
  * Adds the incrementing sequence number to commands along with performing the
  * correlation of responses to requests to create a blocking request-response
  * semantics.
- * 
- * 
  */
 public class ResponseCorrelator extends TransportFilter {
 
