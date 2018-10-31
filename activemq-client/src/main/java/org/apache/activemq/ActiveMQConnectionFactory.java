@@ -343,6 +343,7 @@ public class ActiveMQConnectionFactory extends JNDIBaseStorable implements Conne
         }
         ActiveMQConnection connection = null;
         try {
+        	// 建立Transport和通过Transport建立Connection
             Transport transport = createTransport();
             connection = createActiveMQConnection(transport, factoryStats);
 
@@ -350,7 +351,7 @@ public class ActiveMQConnectionFactory extends JNDIBaseStorable implements Conne
             connection.setPassword(password);
 
             configureConnection(connection);
-
+            // 启动Transport
             transport.start();
 
             if (clientID != null) {
